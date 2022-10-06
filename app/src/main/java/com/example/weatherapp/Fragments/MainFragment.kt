@@ -1,6 +1,7 @@
 package com.example.weatherapp.Fragments
 
 import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import com.android.volley.Request
@@ -19,6 +21,11 @@ import com.example.weatherapp.Adapters.VpAdapter
 import com.example.weatherapp.Adapters.WeatherModel
 import com.example.weatherapp.MainViewModel
 import com.example.weatherapp.databinding.FragmentMainBinding
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.material.tabs.TabLayoutMediator
 import com.squareup.picasso.Picasso
 import org.json.JSONObject
@@ -26,6 +33,7 @@ import org.json.JSONObject
 const val API_KEY = "6c8b10d1db354c2894e105541222608"
 
 class MainFragment : Fragment() {
+    private lateinit var fLocationClient:FusedLocationProviderClient
     private val fList = listOf(
         HoursFragment.newInstance(),
         DaysFragment.newInstance()
@@ -51,8 +59,10 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         checkPermition()
         init()
+        initLocation()
         updateCurrentCard()
-        requestWeatherData("Lviv")
+        getLocation()
+       // requestWeatherData("Lviv")
     }
 
     private fun init() = with(binding) {
@@ -61,16 +71,44 @@ class MainFragment : Fragment() {
         TabLayoutMediator(tabLayout, vp2) { tab, pos ->
             tab.text = tList[pos]
         }.attach()
+        ibSync.setOnClickListener{
+            tabLayout.selectTab(tabLayout.getTabAt(0))
+            getLocation()
+        }
+    }
+
+    private fun initLocation(){
+        fLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
+    }
+
+    private fun getLocation(){
+        val ct = CancellationTokenSource()
+      /*  if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+            ){
+            return
+        }*/
+
+        fLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY,ct.token)
+            .addOnCompleteListener() {
+                requestWeatherData("${it.result.latitude},${it.result.longitude}")
+            }
     }
 
     private fun updateCurrentCard() = with(binding){
         viewModel.liveDataCurrent.observe(viewLifecycleOwner){
-            val maxMinTemp = "${it.maxTemp}C°/ ${it.minTemp }C°"
+            val maxMinTemp = "${it.maxTemp}°C/ ${it.minTemp }°C"
             tvData.text = it.time
             tvCity.text = it.city
-            tvCurrentTemp.text = it.currentTemp
+            tvCurrentTemp.text = it.currentTemp.ifEmpty {maxMinTemp}
             tvCondition.text = it.condition
-            tvMaxMin.text = maxMinTemp
+            tvMaxMin.text = if(it.currentTemp.isEmpty()) "" else maxMinTemp
 
             Picasso.get().load("https:"+it.imageUrl).into(imWeather)
 
@@ -147,6 +185,7 @@ class MainFragment : Fragment() {
             )
             list.add(item)
         }
+        viewModel.liveDataList.value = list
         return  list
     }
 
