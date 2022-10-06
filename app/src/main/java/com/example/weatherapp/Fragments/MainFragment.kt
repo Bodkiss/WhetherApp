@@ -1,8 +1,12 @@
 package com.example.weatherapp.Fragments
 
 import android.Manifest
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,6 +21,7 @@ import androidx.fragment.app.activityViewModels
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.weatherapp.Adapters.DialogManager
 import com.example.weatherapp.Adapters.VpAdapter
 import com.example.weatherapp.Adapters.WeatherModel
 import com.example.weatherapp.MainViewModel
@@ -65,6 +70,11 @@ class MainFragment : Fragment() {
        // requestWeatherData("Lviv")
     }
 
+    override fun onResume() {
+        super.onResume()
+        checkLocation()
+    }
+
     private fun init() = with(binding) {
         val adapter = VpAdapter(activity as FragmentActivity, fList)
         vp2.adapter = adapter
@@ -73,13 +83,39 @@ class MainFragment : Fragment() {
         }.attach()
         ibSync.setOnClickListener{
             tabLayout.selectTab(tabLayout.getTabAt(0))
-            getLocation()
+            checkLocation()
+        }
+        ibSearch.setOnClickListener{
+            DialogManager.searchByNameDialog(requireContext(), object : DialogManager.Listener{
+                override fun onClick(name: String?) {
+                    name?.let { it1 -> requestWeatherData(it1) }
+                }
+
+            })
         }
     }
 
     private fun initLocation(){
         fLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
+    }
+
+    private fun checkLocation(){
+        if(isLocationEnabled()){
+            getLocation()
+        }else{
+            DialogManager.locationSettingsDialog(requireContext()
+                ,object : DialogManager.Listener{
+                    override fun onClick(name:String?) {
+                        startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                    }
+                })
+        }
+    }
+
+    private fun isLocationEnabled():Boolean{
+        val lm = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return  lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 
     private fun getLocation(){
