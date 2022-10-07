@@ -7,11 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.ListAdapter
 import com.example.weatherapp.Adapters.WeatherAdapter
 import com.example.weatherapp.Adapters.WeatherModel
-import com.example.weatherapp.MainViewModel
-import com.example.weatherapp.R
+import com.example.weatherapp.presentation.MainViewModel
 import com.example.weatherapp.databinding.FragmentDaysBinding
 
 
@@ -19,7 +17,7 @@ class DaysFragment : Fragment(), WeatherAdapter.Listener {
 
     private lateinit var adapter: WeatherAdapter
     private lateinit var binding: FragmentDaysBinding
-    private val viewModel:MainViewModel by activityViewModels()
+    private val viewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

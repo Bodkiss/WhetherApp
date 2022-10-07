@@ -24,10 +24,9 @@ import com.android.volley.toolbox.Volley
 import com.example.weatherapp.Adapters.DialogManager
 import com.example.weatherapp.Adapters.VpAdapter
 import com.example.weatherapp.Adapters.WeatherModel
-import com.example.weatherapp.MainViewModel
+import com.example.weatherapp.presentation.MainViewModel
 import com.example.weatherapp.databinding.FragmentMainBinding
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
