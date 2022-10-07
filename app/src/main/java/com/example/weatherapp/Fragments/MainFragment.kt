@@ -64,10 +64,11 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         checkPermition()
         init()
+        requestWeatherData("Lviv")
         initLocation()
         updateCurrentCard()
-        getLocation()
-       // requestWeatherData("Lviv")
+        //getLocation()
+
     }
 
     override fun onResume() {
@@ -120,7 +121,7 @@ class MainFragment : Fragment() {
 
     private fun getLocation(){
         val ct = CancellationTokenSource()
-      /*  if (ActivityCompat.checkSelfPermission(
+       if (ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
@@ -129,7 +130,7 @@ class MainFragment : Fragment() {
             ) != PackageManager.PERMISSION_GRANTED
             ){
             return
-        }*/
+        }
 
         fLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY,ct.token)
             .addOnCompleteListener() {
