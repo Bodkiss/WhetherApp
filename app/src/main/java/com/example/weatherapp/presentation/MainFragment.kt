@@ -1,4 +1,4 @@
-package com.example.weatherapp.Fragments
+package com.example.weatherapp.presentation
 
 import android.Manifest
 import android.content.Context
@@ -23,9 +23,10 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.weatherapp.Adapters.DialogManager
 import com.example.weatherapp.Adapters.VpAdapter
-import com.example.weatherapp.Adapters.WeatherModel
-import com.example.weatherapp.presentation.MainViewModel
+import com.example.weatherapp.data.WeatherModel
+import com.example.weatherapp.Fragments.isPermitionFranted
 import com.example.weatherapp.databinding.FragmentMainBinding
+import com.example.weatherapp.domain.useCase.ParseDaysUseCase
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
@@ -50,6 +51,9 @@ class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
     private val viewModel: MainViewModel by activityViewModels()
 
+    private val parseDaysUseCase = ParseDaysUseCase()
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,6 +70,8 @@ class MainFragment : Fragment() {
         requestWeatherData("Lviv")
         initLocation()
         updateCurrentCard()
+
+       //
         //getLocation()
 
     }
@@ -93,6 +99,7 @@ class MainFragment : Fragment() {
 
             })
         }
+
     }
 
     private fun initLocation(){
@@ -147,9 +154,11 @@ class MainFragment : Fragment() {
             tvMaxMin.text = if(it.currentTemp.isEmpty()) "" else maxMinTemp
 
             Picasso.get().load("https:"+it.imageUrl).into(imWeather)
-
+            binding.progressBar.visibility = View.INVISIBLE
+            binding.imWeather.visibility = View.VISIBLE
 
         }
+
     }
 
 
@@ -195,7 +204,13 @@ class MainFragment : Fragment() {
 
     private fun parseWeatherData(result: String) {
         val mainObject = JSONObject(result)
-        val list = parseDays(mainObject)
+
+        //val list = parseDays(mainObject)
+        val list = parseDaysUseCase.executeDays(mainObject)
+        viewModel.liveDataList.value = list
+
+
+
         parseCurrentData(mainObject,list[0])
 
     }
@@ -225,7 +240,7 @@ class MainFragment : Fragment() {
         return  list
     }
 
-    private fun parseCurrentData(mainObject: JSONObject, weatherItem:WeatherModel) {
+    private fun parseCurrentData(mainObject: JSONObject, weatherItem: WeatherModel) {
         val item = WeatherModel(
             city = mainObject.getJSONObject("location").getString("name"),
             time = mainObject.getJSONObject("current").getString("last_updated"),

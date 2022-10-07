@@ -42,16 +42,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="20/07/2022 13:00"
+                android:text=""
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/imWeather"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="80dp"
+                android:layout_height="69dp"
                 android:layout_marginTop="30dp"
+                android:visibility="invisible"
                 android:src="@drawable/ic_launcher_foreground"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -60,7 +61,7 @@
                 android:id="@+id/tvCity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lviv"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -71,7 +72,7 @@
                 android:id="@+id/tvCurrentTemp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="20ºC"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="60sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -82,7 +83,7 @@
                 android:id="@+id/tvCondition"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sunny"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -93,7 +94,7 @@
                 android:id="@+id/tvMaxMin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="34ºC/15ºC"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -102,27 +103,40 @@
 
             <ImageButton
                 android:id="@+id/ibSearch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="10dp"
+                android:layout_width="54dp"
+                android:layout_height="53dp"
+                android:layout_marginStart="8dp"
                 android:background="@null"
                 android:src="@drawable/search"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvCondition"
+                app:layout_constraintTop_toBottomOf="@+id/tvData"
+                app:layout_constraintVertical_bias="0.994"
                 tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
             <ImageButton
                 android:id="@+id/ibSync"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="53dp"
+                android:layout_height="43dp"
                 android:layout_marginEnd="16dp"
                 android:background="@null"
                 android:src="@drawable/synch"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/ibSearch"
                 tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="@style/CardView.Dark"
+                android:progressTint="@color/purple_200"
+                android:layout_width="302dp"
+                android:layout_height="154dp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvMaxMin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.66"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.782" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

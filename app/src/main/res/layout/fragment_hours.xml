@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.HoursFragment"
+    tools:context=".presentation.HoursFragment"
     android:layout_gravity="center">
 
     <!-- TODO: Update blank fragment layout -->

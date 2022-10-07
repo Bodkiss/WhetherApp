@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.R
+import com.example.weatherapp.data.WeatherModel
 import com.example.weatherapp.databinding.ListItemBinding
 import com.squareup.picasso.Picasso
 
@@ -15,7 +16,7 @@ class WeatherAdapter(val listener: Listener?):ListAdapter<WeatherModel,
         WeatherAdapter.Holder>(Comparator()) {
     class Holder(view: View,val listener: Listener?):RecyclerView.ViewHolder(view){
         val binding = ListItemBinding.bind(view)
-        var itemTemp:WeatherModel? = null
+        var itemTemp: WeatherModel? = null
         init {
             itemView.setOnClickListener{
                 itemTemp?.let { it1 -> listener?.onClick(it1) }

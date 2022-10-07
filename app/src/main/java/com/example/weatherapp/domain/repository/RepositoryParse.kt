@@ -1,4 +1,4 @@
-package com.example.weatherapp.domain.useCase.repository
+package com.example.weatherapp.domain.repository
 
 import com.example.weatherapp.data.WeatherModel
 import org.json.JSONObject
