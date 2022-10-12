@@ -21,10 +21,11 @@ import androidx.fragment.app.activityViewModels
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.weatherapp.Adapters.DialogManager
-import com.example.weatherapp.Adapters.VpAdapter
+import com.example.weatherapp.presentation.Adapters.DialogManager
+import com.example.weatherapp.presentation.Adapters.VpAdapter
 import com.example.weatherapp.data.WeatherModel
 import com.example.weatherapp.Fragments.isPermitionFranted
+import com.example.weatherapp.data.repository.ParseDaysRepositoryImpl
 import com.example.weatherapp.databinding.FragmentMainBinding
 import com.example.weatherapp.domain.useCase.ParseDaysUseCase
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -51,7 +52,8 @@ class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
     private val viewModel: MainViewModel by activityViewModels()
 
-    private val parseDaysUseCase = ParseDaysUseCase()
+    private val parseDaysRepository = ParseDaysRepositoryImpl()
+    private val parseDaysUseCase = ParseDaysUseCase(parseDaysRepository)
 
 
 
@@ -209,13 +211,13 @@ class MainFragment : Fragment() {
         val list = parseDaysUseCase.executeDays(mainObject)
         viewModel.liveDataList.value = list
 
+        val item = parseDaysUseCase.executeDate(mainObject,list[0])
 
-
-        parseCurrentData(mainObject,list[0])
-
+        viewModel.liveDataCurrent.value = item
+        //parseCurrentData(mainObject,list[0])
     }
 
-    private fun parseDays(mainObject: JSONObject): List<WeatherModel> {
+    /*private fun parseDays(mainObject: JSONObject): List<WeatherModel> {
         val list = ArrayList<WeatherModel>()
         val daysArray = mainObject.getJSONObject("forecast")
             .getJSONArray("forecastday")
@@ -238,9 +240,9 @@ class MainFragment : Fragment() {
         }
         viewModel.liveDataList.value = list
         return  list
-    }
+    }*/
 
-    private fun parseCurrentData(mainObject: JSONObject, weatherItem: WeatherModel) {
+    /*private fun parseCurrentData(mainObject: JSONObject, weatherItem: WeatherModel) {
         val item = WeatherModel(
             city = mainObject.getJSONObject("location").getString("name"),
             time = mainObject.getJSONObject("current").getString("last_updated"),
@@ -256,7 +258,7 @@ class MainFragment : Fragment() {
 
         viewModel.liveDataCurrent.value = item
 
-    }
+    }*/
 
     companion object {
         @JvmStatic
